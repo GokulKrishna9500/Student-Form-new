@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+    <style>
+        #table {
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: solid black 1px;
+            padding: 10px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1>Student Form</h1>
+    <form id="userForm">
+        <label>Name</label>
+        <input id="name" type="text" required>
+
+        <label for="">Age</label>
+        <input id="age" type="number" required>
+
+        <button id="btnSave" type="submit">Save</button>
+        <hr>
+    </form>
+
+    <table id="table">
+        <thead id="table-head">
+            <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="table-body">
+        </tbody>
+    </table>
+
+
+
+    <script>
+        const form = document.getElementById("userForm")
+        const tbody = document.getElementById("table").getElementsByTagName("tbody")[0]
+        const btnSave = document.getElementById("btnSave")
+
+        let editidxValue = null
+
+        form.addEventListener("submit", (event) => {
+            event.preventDefault()
+
+            const name = document.getElementById("name").value
+            const age = document.getElementById("age").value
+
+            if (editidxValue === null) {
+                insertRow(name, age)
+            } else {
+                updateRow(editidxValue, name, age)
+            }
+
+            form.reset()
+
+
+        })
+
+        insertRow = (name, age) => {
+
+            const newRow = tbody.insertRow()
+            newRow.insertCell(0).textContent = name
+            newRow.insertCell(1).textContent = age
+
+            const actionCell = newRow.insertCell(2)
+
+            const delBtn = document.createElement("button")
+            delBtn.textContent = "Delete"
+            delBtn.onclick = () => deleteRow(newRow.rowIndex - 1)
+
+            const editBtn = document.createElement("button")
+            editBtn.textContent = "Edit"
+            editBtn.onclick = () => editRow(newRow.rowIndex - 1)
+
+            actionCell.appendChild(editBtn)
+            actionCell.appendChild(delBtn)
+
+        }
+
+        deleteRow = (clickedRowIndex) => {
+            tbody.deleteRow(clickedRowIndex)
+        }
+
+        editRow = (clickedRowIndex) => {
+            const row = tbody.rows[clickedRowIndex]
+            console.log(row)
+
+            row.style.backgroundColor = "yellow"
+
+            const name = row.cells[0].textContent
+            const age = row.cells[1].textContent
+
+
+
+            console.log(name, age)
+
+            document.getElementById("name").value = name
+
+            document.getElementById("age").value = age
+
+            editidxValue = clickedRowIndex
+        }
+
+        updateRow = (index, name, age) => {
+            const row = tbody.rows[index]
+
+            row.cells[0].textContent = name
+            row.cells[1].textContent = age
+
+            row.style.backgroundColor = "palegreen"
+
+
+
+            editidxValue = null
+        }
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>
